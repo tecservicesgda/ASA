@@ -28,8 +28,7 @@ def home():
 # Ruta para manejar el envío al backend
 @app.route('/submit', methods=['POST'])
 def submit():
-    # Aquí puedes procesar los datos que vienen del frontend
-    # Por ejemplo, recibir los datos de repo_name y issue_url
+
     return jsonify({'status': 'success', 'message': 'Data received'})
 
 if __name__ == '__main__':
