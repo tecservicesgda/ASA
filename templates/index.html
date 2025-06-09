@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Repo Issues</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1>GitHub Repositories Issues</h1>
+            <p>Browse repositories and quickly access their issues.</p>
+        </header>
+
+        <section class="repo-list">
+            <div class="repo-item">
+                <h3>{{ repo_name }}</h3> <!-- Nombre del repositorio -->
+                <p>A repository with some super-simple python issues and corresponding github issues. To be used to test swe-agent.</p>
+                <a href="{{ issue_url }}" target="_blank" class="issue-link">Go to Issues</a> <!-- Enlace al issue -->
+            </div>
+        </section>
+
+        <section class="submit-section">
+            <button id="submitBtn" class="submit-btn">Submit</button>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Authors: Antonio Castillejos, Carlos Cruz, Rogelio Guzman, Samuel Padilla, Santiago Vera</p>
+    </footer>
+
+    <!-- Script para enviar datos al backend -->
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            // Obtener los valores que vamos a enviar
+            const repoName = "{{ repo_name }}";
+            const issueUrl = "{{ issue_url }}";
+
+            // Realizar una solicitud POST para enviar los datos al backend
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    repo_name: repoName,
+                    issue_url: issueUrl
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);  // Respuesta del backend
+                alert("Data submitted successfully!");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
