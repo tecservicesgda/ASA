@@ -25,6 +25,7 @@
 
         <section class="submit-section">
             <button id="submitBtn" class="submit-btn">Submit</button>
+            <pre id="output" style="white-space: pre-wrap; margin-top: 1em;"></pre>
         </section>
     </div>
 
@@ -36,11 +37,9 @@
     <!-- Script para enviar datos al backend -->
     <script>
         document.getElementById('submitBtn').addEventListener('click', function() {
-            // Obtener los valores que vamos a enviar
-            const repoName = "{{ repo_name }}";
-            const issueUrl = "{{ issue_url }}";
+            const repoName = {{ repo_name|tojson }};
+            const issueUrl = {{ issue_url|tojson }};
 
-            // Realizar una solicitud POST para enviar los datos al backend
             fetch('/submit', {
                 method: 'POST',
                 headers: {
@@ -53,11 +52,16 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);  // Respuesta del backend
-                alert("Data submitted successfully!");
+                console.log('Received data:', data);
+                if (data.local_service_response && data.local_service_response.stdout) {
+                    document.getElementById('output').textContent = data.local_service_response.stdout;
+                } else {
+                    document.getElementById('output').textContent = 'No stdout received, full data:\n' + JSON.stringify(data, null, 2);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('output').textContent = 'Error al enviar datos al backend.';
             });
         });
     </script>
